@@ -37,6 +37,11 @@ class ViewController: CombineViewController {
         setupCollectionView()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setToolbarHidden(false, animated: false)
+    }
+    
     @objc
     private func barButtonPressed() {
         navigationController?.pushViewController(CreateViewController(), animated: true)
@@ -44,7 +49,6 @@ class ViewController: CombineViewController {
     
     private func setupNavigation() {
         navigationController?.navigationBar.prefersLargeTitles = true
-        navigationController?.setToolbarHidden(false, animated: false)
         navigationItem.largeTitleDisplayMode = .always
         toolbarItems = items
         title = "Photojournal"

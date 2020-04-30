@@ -8,13 +8,14 @@
 
 import UIKit
 import DataPersistence
+import SnapKit
 import Combine
 
 class CreateViewController: CombineViewController {
     
     private lazy var imageView: UIImageView = {
         let iv = UIImageView()
-        iv.image = UIImage(systemName: "person3")
+        iv.image = UIImage(systemName: "person")
         iv.contentMode = .scaleAspectFill
         iv.isUserInteractionEnabled = true
         iv.addGestureRecognizer(tap)
@@ -28,13 +29,16 @@ class CreateViewController: CombineViewController {
     }()
     
     private lazy var tap: UITapGestureRecognizer = {
-        let tap = UITapGestureRecognizer(target: nil, action: nil)
+        let tap = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
         return tap
     }()
     
-    private lazy var textView: UITextView = {
-        let tv = UITextView()
+    private lazy var textField: UITextField = {
+        let tv = UITextField()
+        tv.borderStyle = .roundedRect
+        tv.placeholder = "Enter details here.."
         tv.delegate = self
+        tv.font = tv.font?.withSize(17)
         return tv
     }()
     
@@ -68,11 +72,30 @@ class CreateViewController: CombineViewController {
         super.viewDidLoad()
         
         title = page != nil ? "Edit Page" : "Create Page"
+        navigationItem.rightBarButtonItem = barButton
+        navigationController?.setToolbarHidden(true, animated: false)
+        view.backgroundColor = .systemBackground
         updateUI()
+        setupSubviews()
     }
     
     @objc private func imageTapped() {
-        //TODO: Present picker
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let cameraAction = UIAlertAction(title: "Camera", style: .default) { [weak self] _ in
+            self?.showPicker(sourceType: .camera)
+        }
+        let libraryAction = UIAlertAction(title: "Photo Library", style: .default) { [weak self] _ in
+            self?.showPicker(sourceType: .photoLibrary)
+        }
+        
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            alertController.addAction(cameraAction)
+        }
+        
+        alertController.addAction(libraryAction)
+        alertController.addAction(cancelAction)
+        present(alertController, animated: true)
     }
     
     @objc private func barButtonPressed() {
@@ -85,6 +108,32 @@ class CreateViewController: CombineViewController {
             .map { $0 && $1 }
             .assign(to: \.isEnabled, on: barButton)
             .store(in: &subscriptions)
+    }
+    
+    private func setupSubviews() {
+        setupImageView()
+        setupTextView()
+        
+    }
+    
+    private func setupImageView() {
+        view.addSubview(imageView)
+        
+        imageView.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.height.equalTo(view.frame.height * 2 / 3)
+        }
+    }
+    
+    private func setupTextView() {
+        view.addSubview(textField)
+        
+        textField.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.bottom.equalTo(imageView.snp.top)
+        }
     }
 
 }
@@ -104,16 +153,15 @@ extension CreateViewController: UINavigationControllerDelegate, UIImagePickerCon
         hasImageSubject.send(true)
         dismiss(animated: true, completion: nil)
     }
+    
+    private func showPicker(sourceType: UIImagePickerController.SourceType) {
+        imagePicker.sourceType = sourceType
+        present(imagePicker, animated: true)
+    }
 }
 
-extension CreateViewController: UITextViewDelegate {
-    func textViewDidEndEditing(_ textView: UITextView) {
-        textView.resignFirstResponder()
-    }
-    
-    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        hasTextSubject.send(textView.hasText)
-        print(text)
-        return false
+extension CreateViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
     }
 }
