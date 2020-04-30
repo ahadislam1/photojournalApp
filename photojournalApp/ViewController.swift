@@ -7,9 +7,14 @@
 //
 
 import UIKit
+import DataPersistence
 import SnapKit
 
 class ViewController: CombineViewController {
+    
+    let persistence = DataPersistence<Page>(filename: "pages")
+    
+    private var pages = [Page]()
     
     private lazy var spaceButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
     
@@ -39,12 +44,21 @@ class ViewController: CombineViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        loadData()
         navigationController?.setToolbarHidden(false, animated: false)
     }
     
     @objc
     private func barButtonPressed() {
         navigationController?.pushViewController(CreateViewController(), animated: true)
+    }
+    
+    private func loadData() {
+        do {
+           pages = try persistence.loadItems()
+        } catch {
+            showMessage("Error", description: error.localizedDescription)
+        }
     }
     
     private func setupNavigation() {
@@ -67,7 +81,7 @@ class ViewController: CombineViewController {
 
 extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        4
+        pages.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

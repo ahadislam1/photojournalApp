@@ -20,5 +20,29 @@ class CombineViewController: UIViewController {
 
         // Do any additional setup after loading the view.
     }
+    public func showMessage(_ title: String, description: String? = nil) {
+        alert(title: title, text: description)
+            .sink(receiveValue: { _ in })
+            .store(in: &subscriptions)
+    }
+    
+    private func alert(title: String, text: String?) -> AnyPublisher<Void, Never> {
+      let alertVC = UIAlertController(title: title,
+                                      message: text,
+                                      preferredStyle: .alert)
+
+      return Future { resolve in
+        alertVC.addAction(UIAlertAction(title: "OK",
+                                        style: .default) { _ in
+          resolve(.success(()))
+        })
+
+        self.present(alertVC, animated: true, completion: nil)
+      }
+      .handleEvents(receiveCancel: {
+        self.dismiss(animated: true)
+      })
+      .eraseToAnyPublisher()
+    }
     
 }

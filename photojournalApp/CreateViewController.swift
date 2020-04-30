@@ -13,6 +13,8 @@ import Combine
 
 class CreateViewController: CombineViewController {
     
+    let persistence = DataPersistence<Page>(filename: "pages")
+    
     private lazy var imageView: UIImageView = {
         let iv = UIImageView()
         iv.image = UIImage(systemName: "person")
@@ -39,6 +41,7 @@ class CreateViewController: CombineViewController {
         tv.placeholder = "Enter details here.."
         tv.delegate = self
         tv.font = tv.font?.withSize(17)
+        tv.addTarget(self, action: #selector(textFieldEdit(_:)), for: .editingChanged)
         return tv
     }()
     
@@ -99,7 +102,26 @@ class CreateViewController: CombineViewController {
     }
     
     @objc private func barButtonPressed() {
+        if var page = page, let image = imageView.image, let text = textField.text {
+            page.imageData = image.jpegData(compressionQuality: 1.0)!
+            page.text = text
+            
+            persistence.update(self.page!, with: page)
+        } else if let data = imageView.image?.jpegData(compressionQuality: 1.0),
+            let text = textField.text {
+            let page = Page(imageData: data, text: text)
+            do {
+                try persistence.createItem(page)
+            } catch {
+                showMessage("Error", description: error.localizedDescription)
+            }
+        }
+        
         navigationController?.popViewController(animated: true)
+    }
+    
+    @objc private func textFieldEdit(_ sender: UITextField) {
+        hasTextSubject.send(sender.hasText)
     }
     
     private func updateUI() {
