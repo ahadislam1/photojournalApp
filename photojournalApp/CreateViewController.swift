@@ -34,6 +34,7 @@ class CreateViewController: CombineViewController {
     
     private lazy var textView: UITextView = {
         let tv = UITextView()
+        tv.delegate = self
         return tv
     }()
     
@@ -42,6 +43,9 @@ class CreateViewController: CombineViewController {
         b.isEnabled = false
         return b
     }()
+    
+    private let hasImageSubject = PassthroughSubject<Bool, Never>()
+    private let hasTextSubject = PassthroughSubject<Bool, Never>()
     
     var page: Page?
     
@@ -64,24 +68,52 @@ class CreateViewController: CombineViewController {
         super.viewDidLoad()
         
         title = page != nil ? "Edit Page" : "Create Page"
+        updateUI()
     }
     
     @objc private func imageTapped() {
-        
+        //TODO: Present picker
     }
     
     @objc private func barButtonPressed() {
-        
+        navigationController?.popViewController(animated: true)
+    }
+    
+    private func updateUI() {
+        hasImageSubject
+            .combineLatest(hasTextSubject)
+            .map { $0 && $1 }
+            .assign(to: \.isEnabled, on: barButton)
+            .store(in: &subscriptions)
     }
 
 }
 
 extension CreateViewController: UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
+    }
+    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         guard let originalImage = info[.originalImage] as? UIImage else {
             return
         }
         
+        imageView.image = originalImage
+        hasImageSubject.send(true)
+        dismiss(animated: true, completion: nil)
+    }
+}
+
+extension CreateViewController: UITextViewDelegate {
+    func textViewDidEndEditing(_ textView: UITextView) {
+        textView.resignFirstResponder()
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        hasTextSubject.send(textView.hasText)
+        print(text)
+        return false
     }
 }
