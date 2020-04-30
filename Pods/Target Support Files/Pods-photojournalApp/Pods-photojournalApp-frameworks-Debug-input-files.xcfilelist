@@ -1,0 +1,3 @@
+${PODS_ROOT}/Target Support Files/Pods-photojournalApp/Pods-photojournalApp-frameworks.sh
+${BUILT_PRODUCTS_DIR}/EMTNeumorphicView/EMTNeumorphicView.framework
+${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework
