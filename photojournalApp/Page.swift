@@ -19,4 +19,9 @@ struct Page: Codable, Equatable {
         self.imageData = imageData
         self.text = text
     }
+    
+    static func == (lhs: Page, rhs: Page) -> Bool {
+        lhs.id == rhs.id
+    }
+    
 }

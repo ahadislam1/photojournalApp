@@ -108,7 +108,11 @@ class CreateViewController: CombineViewController {
             page.imageData = image.jpegData(compressionQuality: 1.0)!
             page.text = text
             
-            persistence.update(self.page!, with: page)
+            let pages = try! persistence.loadItems()
+            let index = pages.firstIndex(of: page)!
+            print(persistence.update(page, at: index))
+            
+            
         } else if let data = imageView.image?.jpegData(compressionQuality: 1.0),
             let text = textField.text {
             let page = Page(imageData: data, text: text)
@@ -127,11 +131,18 @@ class CreateViewController: CombineViewController {
     }
     
     private func updateUI() {
-        hasImageSubject
-            .combineLatest(hasTextSubject)
-            .map { $0 && $1 }
-            .assign(to: \.isEnabled, on: barButton)
-            .store(in: &subscriptions)
+        if page == nil {
+            hasImageSubject
+                .combineLatest(hasTextSubject)
+                .map { $0 && $1 }
+                .assign(to: \.isEnabled, on: barButton)
+                .store(in: &subscriptions)
+        } else {
+            hasImageSubject
+                .merge(with: hasTextSubject)
+                .assign(to: \.isEnabled, on: barButton)
+                .store(in: &subscriptions)
+        }
     }
     
     private func setupSubviews() {
@@ -159,7 +170,7 @@ class CreateViewController: CombineViewController {
             make.bottom.equalTo(imageView.snp.top)
         }
     }
-
+    
 }
 
 extension CreateViewController: UINavigationControllerDelegate, UIImagePickerControllerDelegate {

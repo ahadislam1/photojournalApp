@@ -93,6 +93,9 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
             return UICollectionViewCell()
         }
         cell.configureCell(page: pages[indexPath.row])
+        cell.cellPublisher
+            .sink(receiveValue: didPressCellButton(_:))
+            .store(in: &subscriptions)
         return cell
     }
     
