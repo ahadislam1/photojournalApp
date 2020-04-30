@@ -104,11 +104,17 @@ class CreateViewController: CombineViewController {
     }
     
     @objc private func barButtonPressed() {
-        if var page = page, let image = imageView.image, let text = textField.text {
-            page.imageData = image.jpegData(compressionQuality: 1.0)!
+        if var page = page, let image = imageView.image, let text = textField.text, let data = image.jpegData(compressionQuality: 1.0) {
+            page.imageData = data
             page.text = text
             
-            let pages = try! persistence.loadItems()
+            // We know that there is at least ONE item in persistence if they got here by now.
+            var pages = [Page]()
+            do {
+                pages = try persistence.loadItems()
+            } catch {
+                showMessage("Error", description: error.localizedDescription)
+            }
             let index = pages.firstIndex(of: page)!
             print(persistence.update(page, at: index))
             
