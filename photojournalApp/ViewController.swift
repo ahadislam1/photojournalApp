@@ -14,7 +14,11 @@ class ViewController: CombineViewController {
     
     let persistence = DataPersistence<Page>(filename: "pages")
     
-    private var pages = [Page]()
+    private var pages = [Page]() {
+        didSet {
+            collectionView.reloadData()
+        }
+    }
     
     private lazy var spaceButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
     
@@ -88,12 +92,40 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "journalCell", for: indexPath) as? JournalViewCell else {
             return UICollectionViewCell()
         }
-        //TODO: Configure cell, store subscriber for cell
+        cell.configureCell(page: pages[indexPath.row])
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         CGSize(width: view.frame.width, height: view.frame.height / 2)
+    }
+    
+    func didPressCellButton(_ cell: JournalViewCell) {
+        guard let index = collectionView.indexPath(for: cell) else {
+            return
+        }
+        
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let editAction = UIAlertAction(title: "Edit", style: .default) {[weak self] _ in
+            self?.navigationController?.pushViewController(CreateViewController(page: (self?.pages[index.row])!), animated: true)
+        }
+        let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { [weak self] _ in
+            do {
+                try self?.persistence.deleteItem(at: index.row)
+            } catch {
+                self?.showMessage("Error", description: error.localizedDescription)
+            }
+            self?.collectionView.deleteItems(at: [index])
+            self?.pages.remove(at: index.row)
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
+        alertController.addAction(editAction)
+        alertController.addAction(deleteAction)
+        alertController.addAction(cancelAction)
+        
+        present(alertController, animated: true)
     }
     
 }

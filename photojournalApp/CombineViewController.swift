@@ -15,11 +15,7 @@ class CombineViewController: UIViewController {
     /// A place to store subscriber's subscriptions.
     var subscriptions = Set<AnyCancellable>()
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
+    /// Presents an alert controller with a given title and optional description.
     public func showMessage(_ title: String, description: String? = nil) {
         alert(title: title, text: description)
             .sink(receiveValue: { _ in })

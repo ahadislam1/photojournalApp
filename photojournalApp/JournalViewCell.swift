@@ -15,7 +15,7 @@ class JournalViewCell: UICollectionViewCell {
     
     private lazy var imageView: UIImageView = {
         let iv = UIImageView()
-        iv.contentMode = .scaleAspectFit
+        iv.contentMode = .scaleAspectFill
         return iv
     }()
     
@@ -36,8 +36,9 @@ class JournalViewCell: UICollectionViewCell {
     
     private lazy var button: UIButton = {
         let b = UIButton(type: .system)
-        b.setImage(UIImage(systemName: "ellipses.circle"), for: .normal)
+        b.setImage(UIImage(systemName: "ellipsis.circle"), for: .normal)
         b.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
+        b.tintColor = .systemBlue
         return b
     }()
     
@@ -52,7 +53,7 @@ class JournalViewCell: UICollectionViewCell {
         return v
     }()
     
-    public var cell: AnyPublisher<JournalViewCell, Never> {
+    public var cellPublisher: AnyPublisher<JournalViewCell, Never> {
         return cellSubject.eraseToAnyPublisher()
     }
     
@@ -62,6 +63,14 @@ class JournalViewCell: UICollectionViewCell {
         super.layoutSubviews()
         setupSubviews()
         imageView.layer.masksToBounds = true
+        imageView.layer.cornerRadius = 24
+        imageView.clipsToBounds = true
+    }
+    
+    public func configureCell(page: Page) {
+        imageView.image = UIImage(data: page.imageData)
+        label.text = page.text
+        dateLabel.text = "\(page.date)"
     }
     
     @objc
@@ -74,6 +83,7 @@ class JournalViewCell: UICollectionViewCell {
         setupImage()
         setupLabel()
         setupDateLabel()
+        setupButton()
     }
     
     private func setupNeuview() {
@@ -86,7 +96,7 @@ class JournalViewCell: UICollectionViewCell {
     private func setupImage() {
         neuView.addSubview(imageView)
         imageView.snp.makeConstraints { make in
-            make.top.leading.trailing.equalToSuperview()
+            make.leading.trailing.top.equalToSuperview()
             make.height.equalTo(neuView.snp.height).dividedBy(1.76)
         }
     }
@@ -104,6 +114,14 @@ class JournalViewCell: UICollectionViewCell {
         dateLabel.snp.makeConstraints { make in
             make.leading.trailing.equalTo(label)
             make.bottom.equalToSuperview().offset(-8)
+        }
+    }
+    
+    private func setupButton() {
+        neuView.addSubview(button)
+        button.snp.makeConstraints { make in
+            make.trailing.top.equalToSuperview().inset(8)
+            make.size.equalTo(CGSize(width: 40, height: 40))
         }
     }
 }

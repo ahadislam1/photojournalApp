@@ -65,6 +65,8 @@ class CreateViewController: CombineViewController {
     init(page: Page) {
         self.page = page
         super.init(nibName: nil, bundle: nil)
+        textField.text = page.text
+        imageView.image = UIImage(data: page.imageData)
     }
     
     required init?(coder: NSCoder) {
