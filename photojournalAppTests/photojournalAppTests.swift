@@ -7,9 +7,12 @@
 //
 
 import XCTest
+import DataPersistence
 @testable import photojournalApp
 
 class photojournalAppTests: XCTestCase {
+    
+    let persistence = DataPersistence<Page>(filename: "pages")
 
     func testEquality() {
         let id = UUID().uuidString
@@ -20,6 +23,27 @@ class photojournalAppTests: XCTestCase {
         let newId = page.id
         XCTAssertEqual(newId, page.id)
         XCTAssert(page == page2)
+    }
+    
+    func testLoad() {
+        var something: [Page]? = nil
+        do {
+            something = try persistence.loadItems()
+        } catch {
+            XCTFail("failure")
+        }
+        XCTAssertNotNil(something)
+    }
+    
+    func testDeleteAll() {
+        persistence.removeAll()
+        var x = [Page]()
+        do {
+            x = try persistence.loadItems()
+        } catch {
+            XCTFail("failure")
+        }
+        XCTAssert(x.count == 0)
     }
 
 }
