@@ -18,6 +18,7 @@
 		0B263066245B59740071BE46 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B263065245B59740071BE46 /* GradientView.swift */; };
 		0B263069245B5C6C0071BE46 /* DataPersistence in Frameworks */ = {isa = PBXBuildFile; productRef = 0B263068245B5C6C0071BE46 /* DataPersistence */; };
 		0B26306D245B5CA60071BE46 /* Page.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B26306C245B5CA60071BE46 /* Page.swift */; };
+		0B26306F245B68530071BE46 /* CombineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B26306E245B68530071BE46 /* CombineViewController.swift */; };
 		A677AD6FCD8A214F1CE1C07E /* Pods_photojournalAppTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CA4AA4E62E97FB3EC5ACFB7 /* Pods_photojournalAppTests.framework */; };
 		D9C58CD5E7532F164CA88CF1 /* Pods_photojournalApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B98F3ED729195EC86F8D83E2 /* Pods_photojournalApp.framework */; };
 /* End PBXBuildFile section */
@@ -47,6 +48,7 @@
 		0B263063245B511C0071BE46 /* CreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateViewController.swift; sourceTree = "<group>"; };
 		0B263065245B59740071BE46 /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
 		0B26306C245B5CA60071BE46 /* Page.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Page.swift; sourceTree = "<group>"; };
+		0B26306E245B68530071BE46 /* CombineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombineViewController.swift; sourceTree = "<group>"; };
 		4CA4AA4E62E97FB3EC5ACFB7 /* Pods_photojournalAppTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_photojournalAppTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B98F3ED729195EC86F8D83E2 /* Pods_photojournalApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_photojournalApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE00B27DCF036058F604BA2D /* Pods-photojournalAppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-photojournalAppTests.debug.xcconfig"; path = "Target Support Files/Pods-photojournalAppTests/Pods-photojournalAppTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -101,8 +103,9 @@
 			children = (
 				0B0ABB19245B5009005886BB /* AppDelegate.swift */,
 				0B0ABB1B245B5009005886BB /* SceneDelegate.swift */,
-				0B0ABB1D245B5009005886BB /* ViewController.swift */,
+				0B26306E245B68530071BE46 /* CombineViewController.swift */,
 				0B263065245B59740071BE46 /* GradientView.swift */,
+				0B0ABB1D245B5009005886BB /* ViewController.swift */,
 				0B263061245B51020071BE46 /* JournalViewCell.swift */,
 				0B26306C245B5CA60071BE46 /* Page.swift */,
 				0B263063245B511C0071BE46 /* CreateViewController.swift */,
@@ -317,6 +320,7 @@
 			files = (
 				0B263064245B511C0071BE46 /* CreateViewController.swift in Sources */,
 				0B0ABB1E245B5009005886BB /* ViewController.swift in Sources */,
+				0B26306F245B68530071BE46 /* CombineViewController.swift in Sources */,
 				0B263066245B59740071BE46 /* GradientView.swift in Sources */,
 				0B0ABB1A245B5009005886BB /* AppDelegate.swift in Sources */,
 				0B26306D245B5CA60071BE46 /* Page.swift in Sources */,

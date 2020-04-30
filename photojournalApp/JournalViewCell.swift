@@ -9,12 +9,12 @@
 import UIKit
 import SnapKit
 import EMTNeumorphicView
+import Combine
 
 class JournalViewCell: UICollectionViewCell {
     
     private lazy var imageView: UIImageView = {
         let iv = UIImageView()
-        iv.clipsToBounds = true
         iv.contentMode = .scaleAspectFit
         return iv
     }()
@@ -34,6 +34,13 @@ class JournalViewCell: UICollectionViewCell {
         return l
     }()
     
+    private lazy var button: UIButton = {
+        let b = UIButton(type: .system)
+        b.setImage(UIImage(systemName: "ellipses.circle"), for: .normal)
+        b.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
+        return b
+    }()
+    
     private lazy var neuView: EMTNeumorphicView = {
         let v = EMTNeumorphicView()
         v.neumorphicLayer?.backgroundColor = UIColor.systemGroupedBackground.cgColor
@@ -45,19 +52,58 @@ class JournalViewCell: UICollectionViewCell {
         return v
     }()
     
+    public var cell: AnyPublisher<JournalViewCell, Never> {
+        return cellSubject.eraseToAnyPublisher()
+    }
+    
+    private let cellSubject = PassthroughSubject<JournalViewCell, Never>()
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         setupSubviews()
+        imageView.layer.masksToBounds = true
+    }
+    
+    @objc
+    private func buttonPressed() {
+        cellSubject.send(self)
     }
     
     private func setupSubviews() {
         setupNeuview()
+        setupImage()
+        setupLabel()
+        setupDateLabel()
     }
     
     private func setupNeuview() {
         contentView.addSubview(neuView)
         neuView.snp.makeConstraints { make in
             make.edges.equalToSuperview().inset(UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20))
+        }
+    }
+    
+    private func setupImage() {
+        neuView.addSubview(imageView)
+        imageView.snp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
+            make.height.equalTo(neuView.snp.height).dividedBy(1.76)
+        }
+    }
+    
+    private func setupLabel() {
+        neuView.addSubview(label)
+        label.snp.makeConstraints { make in
+            make.top.equalTo(imageView.snp.bottom).offset(7)
+            make.leading.trailing.equalToSuperview().inset(20)
+        }
+    }
+    
+    private func setupDateLabel() {
+        neuView.addSubview(dateLabel)
+        dateLabel.snp.makeConstraints { make in
+            make.leading.trailing.equalTo(label)
+            make.bottom.equalToSuperview().offset(-8)
         }
     }
 }

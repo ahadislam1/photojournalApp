@@ -9,7 +9,7 @@
 import UIKit
 import SnapKit
 
-class ViewController: UIViewController {
+class ViewController: CombineViewController {
     
     private lazy var spaceButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
     
@@ -29,7 +29,7 @@ class ViewController: UIViewController {
     }()
     
     private lazy var items = [spaceButton, barButton, spaceButton]
-        
+                
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -65,12 +65,12 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "journalCell", for: indexPath) as? JournalViewCell else {
             return UICollectionViewCell()
         }
-        
+        //TODO: Configure cell, store subscriber for cell
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        CGSize(width: view.frame.width, height: view.frame.height / 3)
+        CGSize(width: view.frame.width, height: view.frame.height / 2)
     }
     
 }
