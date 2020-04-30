@@ -14,7 +14,7 @@ class ViewController: CombineViewController {
     private lazy var spaceButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
     
     private lazy var barButton: UIBarButtonItem = {
-        let b = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
+        let b = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(barButtonPressed))
         return b
     }()
     
@@ -35,6 +35,11 @@ class ViewController: CombineViewController {
         view.backgroundColor = .systemBackground
         setupNavigation()
         setupCollectionView()
+    }
+    
+    @objc
+    private func barButtonPressed() {
+        navigationController?.pushViewController(CreateViewController(), animated: true)
     }
     
     private func setupNavigation() {
