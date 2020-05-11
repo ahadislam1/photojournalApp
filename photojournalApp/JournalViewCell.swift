@@ -37,6 +37,7 @@ class JournalViewCell: UICollectionViewCell {
     private lazy var button: UIButton = {
         let b = UIButton(type: .system)
         b.setImage(UIImage(systemName: "ellipsis.circle"), for: .normal)
+        b.setImage(UIImage(systemName: "ellipses.circle.fill"), for: .highlighted)
         b.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
         b.tintColor = .systemBlue
         return b
@@ -75,6 +76,7 @@ class JournalViewCell: UICollectionViewCell {
     
     @objc
     private func buttonPressed() {
+        
         cellSubject.send(self)
     }
     
