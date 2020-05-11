@@ -52,6 +52,11 @@ class ViewController: CombineViewController {
         navigationController?.setToolbarHidden(false, animated: false)
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        subscriptions = []
+    }
+    
     @objc
     private func barButtonPressed() {
         navigationController?.pushViewController(CreateViewController(), animated: true)

@@ -11,6 +11,8 @@ import SnapKit
 import EMTNeumorphicView
 import Combine
 
+
+
 class JournalViewCell: UICollectionViewCell {
     
     private lazy var imageView: UIImageView = {
