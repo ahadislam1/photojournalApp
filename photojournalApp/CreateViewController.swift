@@ -104,29 +104,15 @@ class CreateViewController: CombineViewController {
     }
     
     @objc private func barButtonPressed() {
+        // If the view controller is presented in an edited state
         if var page = page, let image = imageView.image, let text = textField.text, let data = image.jpegData(compressionQuality: 1.0) {
-            page.imageData = data
-            page.text = text
             
-            // We know that there is at least ONE item in persistence if they got here by now.
-            var pages = [Page]()
-            do {
-                pages = try persistence.loadItems()
-            } catch {
-                showMessage("Error", description: error.localizedDescription)
-            }
-            let index = pages.firstIndex(of: page)!
-            print(persistence.update(page, at: index))
+            editPage(&page, data, text)
             
-            
+        // If the view controller is presented in a create state
         } else if let data = imageView.image?.jpegData(compressionQuality: 1.0),
             let text = textField.text {
-            let page = Page(imageData: data, text: text)
-            do {
-                try persistence.createItem(page)
-            } catch {
-                showMessage("Error", description: error.localizedDescription)
-            }
+            createPage(data, text)
         }
         
         navigationController?.popViewController(animated: true)
@@ -134,6 +120,31 @@ class CreateViewController: CombineViewController {
     
     @objc private func textFieldEdit(_ sender: UITextField) {
         hasTextSubject.send(sender.hasText)
+    }
+    
+    fileprivate func editPage(_ page: inout Page, _ data: Data, _ text: String) {
+        page.imageData = data
+        page.text = text
+        
+        // We know that there is at least ONE item in persistence if they got here by now.
+        var pages = [Page]()
+        do {
+            pages = try persistence.loadItems()
+        } catch {
+            showMessage("Error", description: error.localizedDescription)
+            return
+        }
+        let index = pages.firstIndex(of: page)!
+        persistence.update(page, at: index)
+    }
+    
+    fileprivate func createPage(_ data: Data, _ text: String) {
+        let page = Page(imageData: data, text: text)
+        do {
+            try persistence.createItem(page)
+        } catch {
+            showMessage("Error", description: error.localizedDescription)
+        }
     }
     
     private func updateUI() {
